@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zervo Auto Care</title><meta name="color-scheme" content="dark">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+:root{--bg:#0A0A0A;--card:#141414;--mr:#7A0C16;--mr2:#8B0000;--wh:#F5F5F5;--mu:#A3A3A3;--ln:#262626;color-scheme:dark;box-sizing:border-box}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--wh);font:400 16px/1.55 "DM Sans",system-ui,sans-serif;padding-bottom:64px}
+body.lock{overflow:hidden}
+h1,h2,h3{font-family:"Barlow Condensed","Arial Narrow",sans-serif;margin:0;letter-spacing:.01em}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+.btn{background:var(--mr);border:0;border-radius:6px;padding:10px 16px;font-weight:700;cursor:pointer;transition:background .2s,transform .1s}
+.btn:hover{background:var(--mr2)}.btn:active{transform:scale(.98)}
+.btn.ghost{background:transparent;border:1px solid #3a3a3a}.btn.ghost:hover{border-color:var(--mr2);background:#1a0a0c}
+.btn.sm{padding:6px 10px;font-size:13px}
+.mu{color:var(--mu)}
+input,select,textarea{background:#101010;border:1px solid var(--ln);border-radius:6px;padding:10px 12px;width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--mr2);outline-offset:-1px}
+label{display:grid;gap:5px;font-size:13px;color:var(--mu)}
+#loader{position:fixed;inset:0;z-index:300;background:#000;display:grid;place-content:center;gap:12px;text-align:center;transition:opacity .5s}
+#loader.done{opacity:0;pointer-events:none}
+#bar{width:220px;height:3px;background:var(--ln)}#bar i{display:block;height:100%;width:0;background:var(--mr2)}
+#tick{background:var(--mr);font-size:13px;text-align:center;padding:6px 12px;position:relative;z-index:60}
+header{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 10px) 20px 10px;background:rgba(10,10,10,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--ln)}
+.logo{font:700 26px "Barlow Condensed",sans-serif}.logo b{color:var(--mr2)}
+header nav{display:flex;gap:22px;color:var(--mu);font-size:14px}header nav a:hover{color:var(--wh)}
+.hr{display:flex;gap:8px}
+@media(max-width:720px){header nav{display:none}}
+#hero{height:400vh;background:#000;position:relative}
+.stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+canvas{position:absolute;inset:0;width:100%;height:100%;transform-origin:50% 46%}
+.hl{position:absolute;left:0;right:0;bottom:11vh;text-align:center;padding:0 20px;pointer-events:none}
+.hl h1{font-size:clamp(40px,8vw,92px);line-height:.95;max-width:14ch;margin:0 auto;text-shadow:0 2px 24px #000}
+.hl p{margin:12px auto 0;max-width:46ch;color:var(--mu)}
+.hl .bn{display:inline-block;margin-top:14px;border:1px solid var(--mr2);padding:4px 12px;border-radius:99px;font-size:13px}
+.wrap{max-width:1180px;margin:0 auto;padding:90px 20px}
+.wrap h2{font-size:clamp(34px,5vw,56px);line-height:1}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;margin-top:32px}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.card .im{aspect-ratio:1;background:radial-gradient(circle at 50% 40%,#2a0f13,#0e0e0e 70%);display:grid;place-items:center}
+.card .im img{width:100%;height:100%;object-fit:cover}.card .im svg{width:62%}
+.card .b{padding:16px;display:grid;gap:10px;flex:1;align-content:start}
+.card h3{font-size:22px;line-height:1.1}
+.sz{display:flex;gap:6px;flex-wrap:wrap}
+.sz button{background:none;border:1px solid #333;border-radius:5px;padding:3px 10px;font-size:13px;cursor:pointer}
+.sz button.on{border-color:var(--mr2);background:#2a0b0f}
+.pr{font:700 26px "Barlow Condensed",sans-serif}
+.st{color:#d9a441;letter-spacing:2px;font-size:14px}
+.rv{font-size:13px;color:var(--mu);border-left:2px solid var(--mr);padding-left:8px;margin:0}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.two{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--ln);border-radius:10px;padding:22px}
+#book form{display:grid;gap:14px;margin-top:28px}
+.ov{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);display:none;justify-content:flex-end}
+.ov.on{display:flex}
+.dr{width:min(440px,100%);background:#0f0f0f;border-left:1px solid var(--ln);height:100%;overflow:auto;padding:20px calc(20px + env(safe-area-inset-right,0px)) 30px;display:grid;gap:14px;align-content:start}
+.dr.mid{margin:auto;height:auto;max-height:92%;border:1px solid var(--ln);border-radius:12px}
+.ov.c{justify-content:center}
+#adm{position:fixed;inset:0;z-index:250;background:var(--bg);overflow:auto;display:none;padding:calc(env(safe-area-inset-top,0px) + 16px) 18px 40px}
+#adm.on{display:block}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0}
+.tabs button.on{background:var(--mr);border-color:var(--mr)}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--ln);vertical-align:top}
+.ts{overflow-x:auto}
+.bars{display:flex;gap:8px;align-items:flex-end;height:140px;margin:14px 0}
+.bars div{flex:1;background:var(--mr);border-radius:3px 3px 0 0;position:relative;min-height:2px}
+.bars span{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:11px;color:var(--mu)}
+#mb{position:fixed;left:0;right:0;bottom:0;z-index:70;display:flex;gap:8px;padding:8px 14px calc(env(safe-area-inset-bottom,0px) + 8px);background:rgba(10,10,10,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--ln)}
+#mb .btn{flex:1}
+footer{border-top:1px solid var(--ln);padding:28px 20px;text-align:center;color:var(--mu);font-size:14px}
+</style></head><body class="lock">
+<div id="loader"><div class="logo">ZERVO<b> AUTO CARE</b></div><div id="bar"><i></i></div><div class="mu" id="pct" style="font-size:13px">Loading 0/60</div></div>
+<div id="tick"></div>
+<header><a class="logo" href="#top">ZERVO<b> AUTO CARE</b></a>
+<nav><a href="#shop">Shop</a><a href="#book">Book detailing</a></nav>
+<div class="hr"><button class="btn ghost sm" data-act="acct" id="acb">Sign in</button><button class="btn sm" data-act="cart" id="ctb">Cart (0)</button></div></header>
+
+<div id="hero"><div class="stick" id="top"><canvas id="cv"></canvas>
+<div class="hl" id="hl"><h1>Gloss that holds. Foam that lets go.</h1><p>Car care products and doorstep detailing, made for Indian roads and Indian summers.</p><span class="bn" id="bn"></span></div></div></div>
+
+<main style="background:var(--bg);position:relative">
+<section class="wrap" id="shop"><h2>The care range</h2><p class="mu">Pick a size, add to cart, or message us on WhatsApp to order straight away. No account needed.</p><div class="grid" id="pg"></div></section>
+<section class="wrap" id="book" style="padding-top:20px"><div class="panel"><h2>Book a detailing visit</h2><p class="mu">Tell us about the vehicle. We confirm the slot on WhatsApp.</p>
+<form id="bf"><div class="two"><label>Vehicle<select name="v"><option>Sedan</option><option>SUV</option><option>Hatchback</option><option>Bike</option></select></label>
+<label>Package<select name="p"><option>Exterior wash &amp; foam</option><option>Interior deep clean</option><option>Ceramic spray coat</option><option>Full detail</option><option>Doorstep product kit</option></select></label>
+<label>Date<input type="date" name="d" required></label><label>Location<input name="l" required placeholder="Area, city"></label>
+<label>Name<input name="n" required></label><label>Phone<input name="c" type="tel" required></label></div>
+<button class="btn" type="submit">Book via WhatsApp</button></form></div></section>
+</main>
+<footer>© 2026 Zervo Auto Care</footer>
+<div id="mb"><button class="btn ghost" data-act="cart" id="mbc">Cart (0)</button><button class="btn" data-act="checkout">Checkout</button></div>
+<div class="ov" id="ov"><div class="dr" id="dr"></div></div>
+<div id="adm"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const FRAMES=Array.from({length:60},(_,i)=>`frames/${String(i+1).padStart(3,'0')}.jpg`);
+const $=id=>document.getElementById(id),clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const inr=n=>'₹'+Number(n).toLocaleString('en-IN');
+const sha=async t=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+/* ---------- state (browser-local demo store) ---------- */
+const KEY='zervo:v1';let S,cart=[],me=null;
+const R=(a,n,t)=>[a,n,t];
+async function init(){
+  try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+  if(!S)S={wa:'910000000000',ticker:'Free doorstep delivery above ₹999 · Use code ZERVO10 for 10% off',banner:'New: Ceramic Spray Wax is back in stock',coupons:[{c:'ZERVO10',pct:10}],orders:[],bookings:[],
+   users:[{email:'admin@zervo.test',ph:await sha('admin123'),name:'Super Admin',role:'super_admin',addr:[]}],
+   products:[
+    {id:1,n:'Premium High-Foam Car Shampoo',t:'bottle',stock:60,d:'pH-balanced, thick foam that lifts grime without stripping wax.',v:[['500ml',349],['1L',599],['5L',2499]],r:[R(5,'Arjun','Foam cannon loves it. Rinses clean.'),R(4,'Meera','Great smell, lasts long.')]},
+    {id:2,n:'Ultra-Gloss Tyre Polish & Protectant',t:'bottle',stock:45,d:'Deep satin black that resists sling and UV fading.',v:[['500ml',399],['1L',699]],r:[R(5,'Faisal','Still black after two weeks of rain.')]},
+    {id:3,n:'Ceramic Spray Wax / Quick Detailer',t:'spray',stock:30,d:'Spray on, wipe off. Water beads and gloss for weeks.',v:[['500ml',799],['1L',1399]],r:[R(5,'Nikhil','Beading is unreal.'),R(4,'Sana','Easy to use, no streaks.')]},
+    {id:4,n:'Interior Dashboard Conditioner & Glass Cleaner',t:'spray',stock:50,d:'Matte finish for dash and trim, streak-free for glass.',v:[['500ml',449],['1L',749]],r:[R(4,'Vivek','No greasy shine, smells fresh.')]},
+    {id:5,n:'Microfiber Wash Mitts & Drying Towels',t:'towel',stock:80,d:'Plush 500 GSM towels and a scratch-safe wash mitt.',v:[['Mitt',249],['Towel 2-pack',499],['Combo',699]],r:[R(5,'Dev','Dries a hatchback in one towel.')]}]};
+  save();
+  try{const e=sessionStorage.getItem('zervo:me');me=e&&S.users.find(u=>u.email===e)}catch(e){}
+  paint();
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){alert('Storage is full. Try smaller product images.')}}
+/* ---------- storefront ---------- */
+const art=p=>p.img?`<img src="${p.img}" alt="${esc(p.n)}" loading="lazy">`:
+ p.t==='towel'?'<svg viewBox="0 0 100 100"><rect x="14" y="52" width="72" height="14" rx="3" fill="#7A0C16"/><rect x="18" y="38" width="64" height="14" rx="3" fill="#a3a3a3"/><rect x="22" y="24" width="56" height="14" rx="3" fill="#F5F5F5"/></svg>':
+ `<svg viewBox="0 0 100 100"><rect x="30" y="${p.t==='spray'?24:14}" width="40" height="${p.t==='spray'?68:78}" rx="8" fill="#1d1d1d" stroke="#555"/><rect x="30" y="52" width="40" height="22" fill="#7A0C16"/>${p.t==='spray'?'<rect x="40" y="10" width="24" height="14" rx="3" fill="#8B0000"/>':'<rect x="40" y="6" width="20" height="10" rx="2" fill="#555"/>'}<circle cx="50" cy="63" r="6" fill="none" stroke="#F5F5F5" stroke-width="2"/></svg>`;
+const avg=p=>p.r.length?p.r.reduce((a,x)=>a+x[0],0)/p.r.length:0;
+const stars=n=>'★'.repeat(Math.round(n))+'☆'.repeat(5-Math.round(n));
+function paint(){
+  $('tick').textContent=S.ticker;$('bn').textContent=S.banner;$('tick').style.display=S.ticker?'':'none';
+  $('pg').innerHTML=S.products.map(p=>`<article class="card" data-id="${p.id}" data-v="0"><div class="im">${art(p)}</div><div class="b"><h3>${esc(p.n)}</h3>
+   <div class="st" title="${avg(p).toFixed(1)} of 5">${stars(avg(p))} <span class="mu" style="letter-spacing:0">(${p.r.length})</span></div><p class="mu" style="margin:0;font-size:14px">${esc(p.d)}</p>
+   <div class="sz">${p.v.map((v,i)=>`<button class="${i?'':'on'}" data-act="size" data-i="${i}">${esc(v[0])}</button>`).join('')}</div>
+   <div class="pr">${inr(p.v[0][1])}</div>${p.stock>0?'':'<span style="color:#ff6b6b">Out of stock</span>'}
+   <div class="row"><button class="btn" data-act="add" ${p.stock>0?'':'disabled'}>Add to cart</button><button class="btn ghost" data-act="buy" ${p.stock>0?'':'disabled'}>WhatsApp</button></div>
+   <p class="rv">“${esc(p.r[0]?.[2]||'Be the first to review')}” ${p.r[0]?'· '+esc(p.r[0][1]):''}</p></div></article>`).join('');
+  const n=cart.reduce((a,c)=>a+c.q,0);$('ctb').textContent=$('mbc').textContent=`Cart (${n})`;
+  $('acb').textContent=me?me.name.split(' ')[0]:'Sign in';
+}
+const wa=t=>open(`https://wa.me/${S.wa}?text=${encodeURIComponent(t)}`,'_blank','noopener');
+const open_=h=>{$('dr').className='dr';$('dr').innerHTML=h;$('ov').className='ov on'};
+const mid=h=>{open_(h);$('dr').className='dr mid';$('ov').className='ov on c'};
+const close=()=>$('ov').className='ov';
+const sub=()=>cart.reduce((a,c)=>{const p=S.products.find(x=>x.id===c.id);return a+(p?p.v[c.i][1]*c.q:0)},0);
+function cartView(){
+  const rows=cart.map((c,k)=>{const p=S.products.find(x=>x.id===c.id);return `<div class="row" style="align-items:center"><div style="flex:3">${esc(p.n)}<div class="mu" style="font-size:13px">${esc(p.v[c.i][0])} · ${inr(p.v[c.i][1])}</div></div><div style="flex:2;display:flex;gap:6px;align-items:center"><button class="btn ghost sm" data-act="q" data-k="${k}" data-d="-1">−</button>${c.q}<button class="btn ghost sm" data-act="q" data-k="${k}" data-d="1">+</button></div></div>`}).join('');
+  open_(`<div class="row" style="align-items:center"><h2 style="font-size:32px">Your cart</h2><button class="btn ghost sm" data-act="close" style="flex:0">Close</button></div>${rows||'<p class="mu">Your cart is empty.</p>'}
+  ${cart.length?`<form id="cf" style="display:grid;gap:12px"><label>Name<input name="n" required value="${esc(me?.name||'')}"></label><label>Phone<input name="c" type="tel" required></label><label>Delivery address<textarea name="a" rows="2" required>${esc(me?.addr?.[0]||'')}</textarea></label>
+  ${me?.addr?.length?`<select id="sa">${me.addr.map(a=>`<option>${esc(a)}</option>`).join('')}</select>`:''}
+  <label>Coupon<input name="k" placeholder="ZERVO10"></label><div class="pr">Subtotal ${inr(sub())}</div>
+  <button class="btn" type="submit">Place order via WhatsApp</button><p class="mu" style="font-size:12px;margin:0">${me?'Ordering as '+esc(me.email):'Guest checkout. No sign-in needed.'}</p></form>`:''}`);
+  const sa=$('sa');if(sa)sa.onchange=()=>document.querySelector('#cf [name=a]').value=sa.value;
+}
+/* ---------- account ---------- */
+function acctView(tab='in'){
+  if(me){const os=S.orders.filter(o=>o.by===me.email);
+   open_(`<div class="row" style="align-items:center"><h2 style="font-size:32px">Hi, ${esc(me.name)}</h2><button class="btn ghost sm" data-act="close" style="flex:0">Close</button></div><p class="mu" style="margin:0">${esc(me.email)}</p>
+   ${me.role==='super_admin'?'<button class="btn" data-act="admin">Open admin dashboard</button>':''}
+   <h3 style="font-size:24px">Orders &amp; tracking</h3>${os.map(o=>`<div class="panel" style="padding:12px"><b>#${o.id}</b> · ${inr(o.total)} · <span style="color:#e8a0a6">${o.status}</span><div class="mu" style="font-size:13px">${new Date(o.at).toLocaleDateString()} · ${o.items.map(i=>esc(i.n)+' ×'+i.q).join(', ')}</div></div>`).join('')||'<p class="mu">No orders yet.</p>'}
+   <h3 style="font-size:24px">Saved addresses</h3>${me.addr.map((a,i)=>`<div class="row" style="align-items:center"><span>${esc(a)}</span><button class="btn ghost sm" style="flex:0" data-act="deladdr" data-i="${i}">Remove</button></div>`).join('')}
+   <form id="af" class="row"><input name="a" placeholder="Add an address" required><button class="btn sm" style="flex:0">Save</button></form><button class="btn ghost" data-act="out">Sign out</button>`);return}
+  open_(`<div class="row" style="align-items:center"><h2 style="font-size:32px">${tab==='in'?'Sign in':'Create account'}</h2><button class="btn ghost sm" data-act="close" style="flex:0">Close</button></div>
+  <form id="lf" data-t="${tab}" style="display:grid;gap:12px">${tab==='up'?'<label>Name<input name="n" required></label>':''}<label>Email<input name="e" type="email" required></label><label>Password<input name="p" type="password" minlength="6" required></label>
+  <button class="btn">${tab==='in'?'Sign in':'Sign up'}</button></form><button class="btn ghost sm" data-act="${tab==='in'?'tup':'tin'}">${tab==='in'?'New here? Create an account':'Have an account? Sign in'}</button>
+  <p class="mu" style="font-size:12px">Phone OTP needs an SMS provider and a real backend. This demo uses email and password stored in this browser only.</p>`);
+}
+/* ---------- admin ---------- */
+let at='products';
+function adm(){
+  const A=$('adm');if(!me||me.role!=='super_admin'){A.className='';return}
+  const tabs=['products','orders','analytics','site','users'];
+  let h=`<div class="row" style="align-items:center"><h2 style="font-size:36px;flex:3">Super admin</h2><button class="btn ghost sm" style="flex:0" data-act="aclose">Exit</button></div><div class="tabs">${tabs.map(t=>`<button class="btn ghost sm ${t===at?'on':''}" data-act="tab" data-t="${t}">${t}</button>`).join('')}</div>`;
+  if(at==='products')h+=`<button class="btn sm" data-act="np">+ Add product</button><div class="ts"><table><tr><th>Product</th><th>Prices (size:₹, …)</th><th>Stock</th><th>Image</th><th></th></tr>${S.products.map(p=>`<tr data-id="${p.id}"><td><input data-f="n" value="${esc(p.n)}"><textarea data-f="d" rows="2">${esc(p.d)}</textarea></td><td><input data-f="v" value="${esc(p.v.map(v=>v[0]+':'+v[1]).join(', '))}"></td><td style="width:80px"><input data-f="stock" type="number" value="${p.stock}"></td><td><input type="file" accept="image/*" data-f="img"></td><td><button class="btn sm" data-act="sp">Save</button> <button class="btn ghost sm" data-act="dp">Delete</button></td></tr>`).join('')}</table></div>`;
+  if(at==='orders'){const st=['Pending','Shipped','Delivered','Completed'];const sel=(k,i,c)=>`<select data-act="stat" data-k="${k}" data-i="${i}">${st.map(s=>`<option ${s===c?'selected':''}>${s}</option>`).join('')}</select>`;
+   h+=`<h3>Orders</h3><div class="ts"><table>${S.orders.map((o,i)=>`<tr><td>#${o.id}<br><span class="mu">${new Date(o.at).toLocaleString()}</span></td><td>${esc(o.name)}<br>${esc(o.phone)}<br>${esc(o.addr)}</td><td>${o.items.map(x=>esc(x.n)+' '+esc(x.s)+' ×'+x.q).join('<br>')}<br><b>${inr(o.total)}</b></td><td>${sel('orders',i,o.status)}</td></tr>`).join('')||'<tr><td>No orders yet</td></tr>'}</table></div>
+   <h3 style="margin-top:24px">Booking requests</h3><div class="ts"><table>${S.bookings.map((b,i)=>`<tr><td>${esc(b.name)}<br>${esc(b.phone)}</td><td>${esc(b.v)} · ${esc(b.p)}<br>${esc(b.d)} · ${esc(b.l)}</td><td>${sel('bookings',i,b.status)}</td></tr>`).join('')||'<tr><td>No bookings yet</td></tr>'}</table></div>`}
+  if(at==='analytics'){const days=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);const k=d.toDateString();return[d.toLocaleDateString(undefined,{weekday:'short'}),S.orders.filter(o=>new Date(o.at).toDateString()===k).reduce((a,o)=>a+o.total,0)]});const mx=Math.max(1,...days.map(d=>d[1]));
+   h+=`<div class="two"><div class="panel">Today<div class="pr">${inr(days[6][1])}</div></div><div class="panel">Last 7 days<div class="pr">${inr(days.reduce((a,d)=>a+d[1],0))}</div></div></div><div class="bars" style="margin-bottom:34px">${days.map(d=>`<div style="height:${d[1]/mx*100}%" title="${inr(d[1])}"><span>${d[0]}</span></div>`).join('')}</div>`}
+  if(at==='site')h+=`<form id="sf" style="display:grid;gap:12px;max-width:560px"><label>Hero banner text<input name="b" value="${esc(S.banner)}"></label><label>Announcement ticker<input name="t" value="${esc(S.ticker)}"></label><label>WhatsApp number (with country code)<input name="w" value="${esc(S.wa)}"></label><label>Coupons (CODE:percent, comma separated)<input name="c" value="${esc(S.coupons.map(c=>c.c+':'+c.pct).join(', '))}"></label><button class="btn">Save site settings</button></form>`;
+  if(at==='users')h+=`<div class="ts"><table>${S.users.map((u,i)=>`<tr><td>${esc(u.name)}<br><span class="mu">${esc(u.email)}</span></td><td>${u.role}</td><td>${u.email===me.email?'You':`<button class="btn ghost sm" data-act="role" data-i="${i}">${u.role==='super_admin'?'Remove admin':'Make admin'}</button>`}</td></tr>`).join('')}</table></div>`;
+  A.innerHTML=h;A.className='on';
+}
+const fit=f=>new Promise(r=>{const fr=new FileReader();fr.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,600/i.width),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);r(c.toDataURL('image/jpeg',.8))};i.src=fr.result};fr.readAsDataURL(f)});
+/* ---------- events ---------- */
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('[data-act]');if(!b||b.tagName==='SELECT')return;const a=b.dataset.act,card=b.closest('.card'),p=card&&S.products.find(x=>x.id==card.dataset.id);
+  if(a==='size'){card.dataset.v=b.dataset.i;card.querySelectorAll('.sz button').forEach(x=>x.classList.toggle('on',x===b));card.querySelector('.pr').textContent=inr(p.v[b.dataset.i][1])}
+  if(a==='add'){const i=+card.dataset.v,c=cart.find(x=>x.id===p.id&&x.i===i);c?c.q++:cart.push({id:p.id,i,q:1});paint();b.textContent='Added ✓';setTimeout(()=>b.textContent='Add to cart',900)}
+  if(a==='buy'){const i=+card.dataset.v;wa(`Hi Zervo, I want to buy ${p.n} (${p.v[i][0]}) at ${inr(p.v[i][1])}.`)}
+  if(a==='cart')cartView();if(a==='checkout')cart.length?cartView():(alert('Your cart is empty. Add a product first.'));
+  if(a==='q'){const c=cart[b.dataset.k];c.q+=+b.dataset.d;if(c.q<1)cart.splice(b.dataset.k,1);paint();cartView()}
+  if(a==='close')close();if(a==='acct')acctView();if(a==='tup')acctView('up');if(a==='tin')acctView('in');
+  if(a==='out'){me=null;sessionStorage.removeItem('zervo:me');paint();close();$('adm').className=''}
+  if(a==='deladdr'){me.addr.splice(b.dataset.i,1);save();acctView()}
+  if(a==='admin'){close();adm();document.body.classList.add('lock')}if(a==='aclose'){$('adm').className='';document.body.classList.remove('lock');paint()}
+  if(a==='tab'){at=b.dataset.t;adm()}
+  if(a==='np'){S.products.push({id:Date.now(),n:'New product',t:'bottle',stock:10,d:'Description',v:[['500ml',499]],r:[]});save();adm()}
+  const tr=b.closest('tr[data-id]');
+  if(a==='dp'&&confirm('Delete this product?')){S.products=S.products.filter(x=>x.id!=tr.dataset.id);save();adm()}
+  if(a==='sp'){const q=S.products.find(x=>x.id==tr.dataset.id),g=f=>tr.querySelector(`[data-f=${f}]`);q.n=g('n').value;q.d=g('d').value;q.stock=+g('stock').value;
+   const v=g('v').value.split(',').map(s=>s.split(':')).filter(s=>s[1]&&!isNaN(+s[1])).map(s=>[s[0].trim(),+s[1]]);if(v.length)q.v=v;
+   const f=g('img').files[0];if(f)q.img=await fit(f);save();adm();b.textContent='Saved'}
+  if(a==='role'){const u=S.users[b.dataset.i];u.role=u.role==='super_admin'?'customer':'super_admin';save();adm()}
+});
+document.addEventListener('change',e=>{const s=e.target;if(s.dataset.act==='stat'){S[s.dataset.k][s.dataset.i].status=s.value;save()}});
+$('ov').addEventListener('click',e=>{if(e.target.id==='ov')close()});
+document.addEventListener('submit',async e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target)),id=e.target.id;
+  if(id==='bf'){S.bookings.unshift({...f,status:'Pending',name:f.n,phone:f.c,v:f.v,p:f.p,d:f.d,l:f.l,at:Date.now()});save();wa(`Booking request\nVehicle: ${f.v}\nPackage: ${f.p}\nDate: ${f.d}\nLocation: ${f.l}\nName: ${f.n}\nPhone: ${f.c}`);e.target.reset()}
+  if(id==='cf'){const k=S.coupons.find(c=>c.c===(f.k||'').trim().toUpperCase()),sb=sub(),total=Math.round(sb*(1-(k?k.pct:0)/100));
+   const items=cart.map(c=>{const p=S.products.find(x=>x.id===c.id);return{n:p.n,s:p.v[c.i][0],q:c.q}});
+   const o={id:Date.now().toString().slice(-6),at:Date.now(),name:f.n,phone:f.c,addr:f.a,items,total,status:'Pending',by:me?me.email:'guest'};
+   cart.forEach(c=>{const p=S.products.find(x=>x.id===c.id);p.stock=Math.max(0,p.stock-c.q)});S.orders.unshift(o);save();
+   wa(`New order #${o.id}\n${items.map(i=>`${i.n} (${i.s}) ×${i.q}`).join('\n')}\nTotal: ${inr(total)}${k?' (coupon '+k.c+')':''}\nName: ${f.n}\nPhone: ${f.c}\nAddress: ${f.a}`);cart=[];paint();close()}
+  if(id==='lf'){const em=f.e.trim().toLowerCase(),h=await sha(f.p);
+   if(e.target.dataset.t==='up'){if(S.users.some(u=>u.email===em))return alert('That email is already registered.');S.users.push({email:em,ph:h,name:f.n,role:'customer',addr:[]});save()}
+   const u=S.users.find(u=>u.email===em&&u.ph===h);if(!u)return alert('Wrong email or password.');
+   me=u;try{sessionStorage.setItem('zervo:me',em)}catch(x){}paint();acctView()}
+  if(id==='af'){me.addr.push(f.a);save();acctView()}
+  if(id==='sf'){S.banner=f.b;S.ticker=f.t;S.wa=f.w.replace(/\D/g,'');S.coupons=f.c.split(',').map(s=>s.split(':')).filter(s=>s[1]).map(s=>({c:s[0].trim().toUpperCase(),pct:+s[1]}));save();alert('Saved')}
+});
+/* ---------- hero sequence ---------- */
+const N=FRAMES.length,cv=$('cv'),cx=cv.getContext('2d'),imgs=[];let cur=0,want=0,zoom=0,fade=1,dirty=true,loaded=0;
+function size(){const d=Math.min(devicePixelRatio||1,2);cv.width=Math.round(innerWidth*d);cv.height=Math.round(innerHeight*d);dirty=true}
+function draw(){const im=imgs[cur];if(!im)return;const W=cv.width,H=cv.height,s=Math.max(W/im.width,H/im.height),w=im.width*s,h=im.height*s;cx.fillStyle='#000';cx.fillRect(0,0,W,H);cx.drawImage(im,(W-w)/2,(H-h)*.5,w,h)}
+function loop(){if(dirty||cur!==want){cur=want;draw();dirty=false;cv.style.transform=`scale(${1+7*zoom*zoom})`;cv.style.opacity=fade}requestAnimationFrame(loop)}
+addEventListener('resize',size);
+function start(){gsap.registerPlugin(ScrollTrigger);ScrollTrigger.create({trigger:'#hero',start:'top top',end:'bottom bottom',scrub:true,onUpdate:s=>{const p=s.progress;want=Math.round(p*(N-1));zoom=clamp((p-.74)/.26);fade=1-clamp((p-.92)/.08);$('hl').style.opacity=1-clamp(p*8);dirty=true}});loop()}
+size();init();
+Promise.all(FRAMES.map((src,i)=>new Promise(r=>{const im=new Image();im.src=src;const done=()=>{imgs[i]=im;loaded++;$('bar').firstChild.style.width=loaded/N*100+'%';$('pct').textContent=`Loading ${loaded}/${N}`;r()};(im.decode?im.decode():Promise.reject()).then(done,()=>{im.onload=done;im.onerror=done;if(im.complete)done()})})))
+.then(()=>{draw();$('loader').classList.add('done');document.body.classList.remove('lock');window.gsap?start():addEventListener('load',start)});
+</script></body></html>
